@@ -7,11 +7,17 @@
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
         <InvariantGlobalization>true</InvariantGlobalization>
-        <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
 
         <SelfContained>true</SelfContained>
-        <PublishSingleFile>true</PublishSingleFile>
-
+        <PublishAot>true</PublishAot>
+        
+        <PlatformTarget>x64</PlatformTarget>
+        
+        <Configurations>Release;Debug</Configurations>                
     </PropertyGroup>
+
+    <ItemGroup>
+      <ProjectReference Include="..\CSharpWrapper\CSharpWrapper.csproj" />
+    </ItemGroup>
 
 </Project>

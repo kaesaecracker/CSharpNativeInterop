@@ -3,7 +3,6 @@
 #include <iostream>
 #include "nativelibrary_export.h"
 
-NATIVELIBRARY_EXPORT void Hello()
-{
+NATIVELIBRARY_EXPORT void Hello() {
     std::cout << "Hello, World!" << std::endl;
 }

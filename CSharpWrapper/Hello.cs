@@ -1,7 +1,7 @@
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 
-namespace CSharpApp.Interop;
+namespace CSharpWrapper;
 
 public static partial class Hello
 {
