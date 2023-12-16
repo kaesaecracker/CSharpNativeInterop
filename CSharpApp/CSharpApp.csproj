@@ -6,14 +6,16 @@
 
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
+        
         <InvariantGlobalization>true</InvariantGlobalization>
+        <PredefinedCulturesOnly>true</PredefinedCulturesOnly>
 
         <SelfContained>true</SelfContained>
         <PublishAot>true</PublishAot>
-        
+
         <PlatformTarget>x64</PlatformTarget>
-        
-        <Configurations>Release;Debug</Configurations>                
+
+        <Configurations>Release;Debug</Configurations>
     </PropertyGroup>
 
     <ItemGroup>
