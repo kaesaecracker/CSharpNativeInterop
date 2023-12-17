@@ -20,11 +20,11 @@ namespace nativelibrary {
 
     typedef void (*LogMethod)(LogLevel level, const interopstr_t message);
 
-    class ILogger {
+    class CsLogger {
         LogMethod _log_method;
 
     public:
-        explicit ILogger(LogMethod log_method);
+        explicit CsLogger(LogMethod log_method);
 
         void log_debug(const interopstr_t message) const;
 

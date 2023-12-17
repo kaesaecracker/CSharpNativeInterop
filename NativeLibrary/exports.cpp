@@ -1,32 +1,29 @@
 #include <iostream>
 #include <nativelibrary_export.h>
 
-#include "library.h"
-#include "logger.h"
+#include "LoadGenerator.h"
+#include "CsLogger.h"
 
 extern "C"
-namespace NATIVELIBRARY_EXPORT nativelibrary {
-     ILogger* ILogger_Constructor(LogMethod log_method) {
-        return new ILogger(log_method);
+namespace nativelibrary
+NATIVELIBRARY_EXPORT {
+    CsLogger* ILogger_Constructor(LogMethod log_method) {
+        return new CsLogger(log_method);
     }
 
-     void ILogger_Destructor(const ILogger* instance) {
-        delete instance;
-    }
-
-    NativeLibrary* NativeLibrary_Constructor(ILogger* logger) {
-        return new NativeLibrary(logger);
-    }
-
-    void NativeLibrary_Test(const NativeLibrary* instance) {
-        instance->Test();
-    }
-
-    void NativeLibrary_Destructor(const NativeLibrary* instance) {
+    void ILogger_Destructor(const CsLogger* instance) {
         delete instance;
     }
 
     void print_hello_world() {
         std::cout << "Hello, World!" << std::endl;
+    }
+
+    LoadGenerator* LoadGenerator_Constructor(CsLogger* logger) {
+        return new LoadGenerator(logger);
+    }
+
+    void LoadGenerator_Destructor(const LoadGenerator* instance) {
+        delete instance;
     }
 }

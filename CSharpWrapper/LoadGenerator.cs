@@ -5,7 +5,7 @@ using Microsoft.Extensions.Logging;
 
 namespace NativeLibrary;
 
-public sealed partial class NativeLibrary : IDisposable
+public sealed partial class LoadGenerator : IDisposable
 {
     private IntPtr _handle;
 
@@ -14,33 +14,28 @@ public sealed partial class NativeLibrary : IDisposable
     private readonly LoggerForNative _loggerForNative;
     // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
-    public NativeLibrary(ILogger<NativeLibrary> logger)
+    public LoadGenerator(ILogger<LoadGenerator> logger)
     {
         _loggerForNative = new LoggerForNative(logger);
-        _handle = NativeLibrary_Constructor(_loggerForNative.NativeHandle);
+        _handle = LoadGenerator_Constructor(_loggerForNative.NativeHandle);
     }
 
     [LibraryImport(nameof(NativeLibrary), StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial IntPtr NativeLibrary_Constructor(IntPtr loggerForNative);
+    private static partial IntPtr LoadGenerator_Constructor(IntPtr loggerForNative);
 
     [LibraryImport(nameof(NativeLibrary), StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial void NativeLibrary_Destructor(IntPtr instance);
+    private static partial void LoadGenerator_Destructor(IntPtr instance);
 
-    [LibraryImport(nameof(NativeLibrary), StringMarshalling = StringMarshalling.Utf8)]
-    [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial void NativeLibrary_Test(IntPtr instance);
-    public void Test() => NativeLibrary_Test(_handle);
-
-    ~NativeLibrary() => Dispose();
+    ~LoadGenerator() => Dispose();
 
     public void Dispose()
     {
         if (_handle == IntPtr.Zero)
             return;
         GC.SuppressFinalize(this);
-        NativeLibrary_Destructor(_handle);
+        LoadGenerator_Destructor(_handle);
         _handle = IntPtr.Zero;
     }
 }
