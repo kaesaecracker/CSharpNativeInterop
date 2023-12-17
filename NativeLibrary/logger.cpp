@@ -16,12 +16,4 @@ namespace nativelibrary {
     void ILogger::log_error(const interopstr_t message) const {
         _log_method(Error, message);
     }
-
-    ILogger* ILogger_Constructor(LogMethod log_method) {
-        return new ILogger(log_method);
-    }
-
-    void ILogger_Destructor(const ILogger* instance) {
-        delete instance;
-    }
 }

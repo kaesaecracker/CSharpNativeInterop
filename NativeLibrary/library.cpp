@@ -3,8 +3,6 @@
 #include <iostream>
 #include <thread>
 
-#include "nativelibrary_export.h"
-
 namespace nativelibrary {
     NativeLibrary::NativeLibrary(ILogger* logger) {
         this->logger = logger;
@@ -19,6 +17,7 @@ namespace nativelibrary {
     }
 
     void NativeLibrary::Test() const {
+        logger->log_debug(u8"test debug message");
     }
 
     void NativeLibrary::bg() const {
@@ -27,17 +26,5 @@ namespace nativelibrary {
             logger->log_info(u8"bar");
             logger->log_info(u8"🤯");
         }
-    }
-
-    NATIVELIBRARY_EXPORT NativeLibrary* NativeLibrary_Constructor(ILogger* logger) {
-        return new NativeLibrary(logger);
-    }
-
-    NATIVELIBRARY_EXPORT void NativeLibrary_Test(const NativeLibrary* instance) {
-        instance->Test();
-    }
-
-    NATIVELIBRARY_EXPORT void NativeLibrary_Destructor(const NativeLibrary* instance) {
-        delete instance;
     }
 }

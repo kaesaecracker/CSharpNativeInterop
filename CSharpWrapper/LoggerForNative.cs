@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using Microsoft.Extensions.Logging;
 
-namespace CSharpWrapper;
+namespace NativeLibrary;
 
 public sealed partial class LoggerForNative: IDisposable
 {
@@ -20,26 +20,23 @@ public sealed partial class LoggerForNative: IDisposable
     {
         _logger = logger;
         _logMethod = Log;
-        NativeHandle = NativeConstructor(_logMethod);
+        NativeHandle = ILogger_Constructor(_logMethod);
     }
 
     private delegate void LogMethod(LogLevel level, string message);
 
-    [LibraryImport("NativeLibrary", EntryPoint = "_ZN13nativelibrary19ILogger_ConstructorEPFvNS_8LogLevelEPKDuE",
-        StringMarshalling = StringMarshalling.Utf8)]
+    [LibraryImport(nameof(NativeLibrary), StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial IntPtr NativeConstructor(LogMethod logMethod);
+    private static partial IntPtr ILogger_Constructor(LogMethod logMethod);
 
-    [LibraryImport("NativeLibrary", EntryPoint = "_ZN13nativelibrary24NativeLibrary_DestructorEPKNS_13NativeLibraryE",
-        StringMarshalling = StringMarshalling.Utf8)]
+    [LibraryImport(nameof(NativeLibrary), StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial void NativeDestroy(IntPtr instance);
+    private static partial void ILogger_Destructor(IntPtr instance);
 
     private void Log(LogLevel level, string message)
     {
         _logger.Log(level, "{Handle} {Message}", NativeHandle, message);
     }
-
 
     ~LoggerForNative() => Dispose();
 
@@ -49,6 +46,6 @@ public sealed partial class LoggerForNative: IDisposable
             return;
         _disposed = true;
         GC.SuppressFinalize(this);
-        NativeDestroy(NativeHandle);
+        ILogger_Destructor(NativeHandle);
     }
 }

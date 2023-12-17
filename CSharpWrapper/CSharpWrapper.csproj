@@ -2,6 +2,8 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
+        
+        <RootNamespace>NativeLibrary</RootNamespace>
 
         <ImplicitUsings>disable</ImplicitUsings>
         <Nullable>enable</Nullable>
