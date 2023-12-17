@@ -7,11 +7,11 @@
 extern "C"
 namespace nativelibrary
 NATIVELIBRARY_EXPORT {
-    CsLogger* ILogger_Constructor(LogMethod log_method) {
+    CsLogger* CsLogger_Constructor(LogMethod log_method) {
         return new CsLogger(log_method);
     }
 
-    void ILogger_Destructor(const CsLogger* instance) {
+    void CsLogger_Destructor(const CsLogger* instance) {
         delete instance;
     }
 

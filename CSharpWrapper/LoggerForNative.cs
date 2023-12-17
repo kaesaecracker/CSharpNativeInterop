@@ -20,18 +20,18 @@ public sealed partial class LoggerForNative: IDisposable
     {
         _logger = logger;
         _logMethod = Log;
-        NativeHandle = ILogger_Constructor(_logMethod);
+        NativeHandle = CsLogger_Constructor(_logMethod);
     }
 
     private delegate void LogMethod(LogLevel level, string message);
 
     [LibraryImport(nameof(NativeLibrary), StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial IntPtr ILogger_Constructor(LogMethod logMethod);
+    private static partial IntPtr CsLogger_Constructor(LogMethod logMethod);
 
     [LibraryImport(nameof(NativeLibrary), StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial void ILogger_Destructor(IntPtr instance);
+    private static partial void CsLogger_Destructor(IntPtr instance);
 
     private void Log(LogLevel level, string message)
     {
@@ -46,6 +46,6 @@ public sealed partial class LoggerForNative: IDisposable
             return;
         _disposed = true;
         GC.SuppressFinalize(this);
-        ILogger_Destructor(NativeHandle);
+        CsLogger_Destructor(NativeHandle);
     }
 }

@@ -18,7 +18,7 @@ namespace nativelibrary {
         // MIT licensed code ends here
     };
 
-    typedef void (*LogMethod)(LogLevel level, const interopstr_t message);
+    typedef void (*LogMethod)(LogLevel level, const char message[]);
 
     class CsLogger {
         LogMethod _log_method;
@@ -26,10 +26,18 @@ namespace nativelibrary {
     public:
         explicit CsLogger(LogMethod log_method);
 
-        void log_debug(const interopstr_t message) const;
+        void log(LogLevel level, const std::string& message) const;
 
-        void log_info(const interopstr_t message) const;
+        void log_debug(const std::string& message) const {
+            log(Debug, message);
+        }
 
-        void log_error(const interopstr_t message) const;
+        void log_info(const std::string& message) const {
+            log(Information, message);
+        }
+
+        void log_error(const std::string& message) const {
+            log(Error, message);
+        }
     };
 }

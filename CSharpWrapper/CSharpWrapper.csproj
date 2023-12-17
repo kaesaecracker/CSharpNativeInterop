@@ -2,7 +2,7 @@
 
     <PropertyGroup>
         <TargetFramework>net8.0</TargetFramework>
-        
+
         <RootNamespace>NativeLibrary</RootNamespace>
 
         <ImplicitUsings>disable</ImplicitUsings>
@@ -16,6 +16,7 @@
         <PlatformTarget>x64</PlatformTarget>
 
         <AnalysisMode>Recommended</AnalysisMode>
+        <NoWarn>CA1848</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

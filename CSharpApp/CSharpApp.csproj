@@ -17,6 +17,7 @@
         <Configurations>Release;Debug</Configurations>
 
         <AnalysisMode>Recommended</AnalysisMode>
+        <NoWarn>CA1848</NoWarn>
     </PropertyGroup>
 
     <ItemGroup>

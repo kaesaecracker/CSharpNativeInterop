@@ -11,6 +11,15 @@ set(CMAKE_CXX_VISIBILITY_PRESET hidden)
 add_compile_options("$<$<C_COMPILER_ID:MSVC>:/utf-8>")
 add_compile_options("$<$<CXX_COMPILER_ID:MSVC>:/utf-8>")
 
+include(FetchContent)
+FetchContent_Declare(fmt
+        GIT_REPOSITORY https://github.com/fmtlib/fmt.git
+        GIT_TAG 10.1.1
+        OVERRIDE_FIND_PACKAGE
+)
+FetchContent_MakeAvailable(fmt)
+find_package(fmt REQUIRED)
+
 add_library(NativeLibrary SHARED
         CsLogger.cpp
         shared.h
@@ -18,6 +27,7 @@ add_library(NativeLibrary SHARED
         LoadGenerator.cpp
         LoadGenerator.h
 )
+target_link_libraries(NativeLibrary PRIVATE fmt::fmt-header-only)
 
 include(GenerateExportHeader)
 generate_export_header(NativeLibrary)

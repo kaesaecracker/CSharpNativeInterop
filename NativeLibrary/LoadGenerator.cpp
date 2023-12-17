@@ -1,5 +1,7 @@
 #include "LoadGenerator.h"
 
+#include <fmt/core.h>
+
 namespace nativelibrary {
     LoadGenerator::LoadGenerator(CsLogger* logger) {
         this->logger = logger;
@@ -12,12 +14,14 @@ namespace nativelibrary {
     }
 
     void LoadGenerator::background_function() const {
-        logger->log_info(u8"starting");
+        size_t tid = std::hash<std::thread::id>()(std::this_thread::get_id());
 
-        while(!terminating) {
-            logger->log_debug(u8"loop");
+        logger->log_info(fmt::format("starting {}", tid));
+
+        while (!terminating) {
+            logger->log_debug(fmt::format("looping {}", tid));
         }
 
-        logger->log_info(u8"stopping");
+        logger->log_info(fmt::format("stopping {}", tid));
     }
 }

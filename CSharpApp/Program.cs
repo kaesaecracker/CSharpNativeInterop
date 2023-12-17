@@ -6,24 +6,26 @@ using NativeLibrary;
 
 var sp = new ServiceCollection()
     .AddLogging(builder => builder
-        .AddConsole()
-        .SetMinimumLevel(LogLevel.Trace))
+        .SetMinimumLevel(LogLevel.Trace)
+        .AddSimpleConsole(options => options.SingleLine = true)
+    )
     .AddTransient<LoadGenerator>()
     .BuildServiceProvider();
+
+var logger = sp.GetRequiredService<ILogger<Program>>();
 
 var waitMs = 1000;
 if (args.Length == 1 && !int.TryParse(args[0], out waitMs))
     Console.Error.WriteLine($"invalid number {args[0]}");
-
 
 using (_ = sp.GetRequiredService<LoadGenerator>())
 using (_ = sp.GetRequiredService<LoadGenerator>())
 using (_ = sp.GetRequiredService<LoadGenerator>())
 using (_ = sp.GetRequiredService<LoadGenerator>())
 {
-    Console.WriteLine("main thread sleeps");
+    logger.LogInformation("main thread sleeps");
     Thread.Sleep(waitMs);
-    Console.WriteLine("main thread wakes up");
+    logger.LogInformation("main thread wakes up");
 }
 
 Hello.PrintHelloWorld();
