@@ -2,6 +2,7 @@ using System;
 using System.Runtime.CompilerServices;
 using System.Runtime.InteropServices;
 using System.Threading;
+using Microsoft.Extensions.Logging;
 
 namespace CSharpWrapper;
 
@@ -9,46 +10,36 @@ using MessageHandle = long;
 
 public sealed record class NativeMessage(MessageHandle Handle, string Message);
 
-public partial class NativeLibrary : IDisposable
+public sealed partial class NativeLibrary : IDisposable
 {
     private IntPtr _handle;
-    private MessageHandle _lastMessageHandle;
 
     private delegate MessageHandle PassMessage(string message);
 
     // ReSharper disable PrivateFieldCanBeConvertedToLocalVariable
     // we have to keep references to the delegates so they are not freed
-    private readonly PassMessage _onMessageDelegate;
+    private readonly LoggerForNative _loggerForNative;
     // ReSharper restore PrivateFieldCanBeConvertedToLocalVariable
 
-    public NativeLibrary(Action<NativeMessage> onMessage)
+    public NativeLibrary(ILogger<NativeLibrary> logger)
     {
-        _onMessageDelegate = OnMessageDelegate;
-        _handle = Initialize(_onMessageDelegate);
-        return;
-
-        MessageHandle OnMessageDelegate(string messageText)
-        {
-            var messageId = Interlocked.Increment(ref _lastMessageHandle);
-            var message = new NativeMessage(messageId, messageText);
-            onMessage(message);
-            return message.Handle;
-        }
+        _loggerForNative = new LoggerForNative(logger);
+        _handle = Initialize(_loggerForNative.NativeHandle);
     }
 
-    [LibraryImport("NativeLibrary", EntryPoint = "_Z24NativeLibrary_InitializePFlPKDuE",
+    [LibraryImport("NativeLibrary", EntryPoint = "_ZN13nativelibrary25NativeLibrary_ConstructorEPNS_7ILoggerE",
         StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial IntPtr Initialize(PassMessage passMessage);
+    private static partial IntPtr Initialize(IntPtr loggerForNative);
 
 
-    [LibraryImport("NativeLibrary", EntryPoint = "_Z26NativeLibrary_DeinitializePK13NativeLibrary",
+    [LibraryImport("NativeLibrary", EntryPoint = "_ZN13nativelibrary24NativeLibrary_DestructorEPKNS_13NativeLibraryE",
         StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
-    private static partial void Deinitialize(IntPtr instance);
+    private static partial void NativeDestroy(IntPtr instance);
 
 
-    [LibraryImport("NativeLibrary", EntryPoint = "_Z18NativeLibrary_TestPK13NativeLibrary",
+    [LibraryImport("NativeLibrary", EntryPoint = "_ZN13nativelibrary18NativeLibrary_TestEPKNS_13NativeLibraryE",
         StringMarshalling = StringMarshalling.Utf8)]
     [UnmanagedCallConv(CallConvs = new[] { typeof(CallConvCdecl) })]
     private static partial void Test(IntPtr instance);
@@ -62,7 +53,7 @@ public partial class NativeLibrary : IDisposable
         if (_handle == IntPtr.Zero)
             return;
         GC.SuppressFinalize(this);
-        Deinitialize(_handle);
+        NativeDestroy(_handle);
         _handle = IntPtr.Zero;
     }
 }

@@ -2,4 +2,8 @@
 
 #include <nativelibrary_export.h>
 
-NATIVELIBRARY_EXPORT void Hello();
+namespace nativelibrary {
+
+    NATIVELIBRARY_EXPORT void Hello();
+
+}

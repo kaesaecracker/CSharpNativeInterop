@@ -6,7 +6,9 @@ set(CMAKE_INTERPROCEDURAL_OPTIMIZATION FALSE)
 
 add_library(NativeLibrary SHARED
         library.cpp
-        hello.cpp)
+        hello.cpp
+        logger.cpp
+        shared_types.h)
 
 include(GenerateExportHeader)
 generate_export_header(NativeLibrary)

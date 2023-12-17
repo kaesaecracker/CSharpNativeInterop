@@ -5,9 +5,9 @@ namespace CSharpWrapper;
 
 public static partial class Hello
 {
-
-    [LibraryImport("NativeLibrary", EntryPoint = "_Z5Hellov")]
+    [LibraryImport("NativeLibrary", EntryPoint = "_ZN13nativelibrary5HelloEv")]
     [UnmanagedCallConv(CallConvs = new[]{ typeof(CallConvCdecl)})]
-    public static partial void PrintHelloWorld();
+    private static partial void NativeHello();
 
+    public static void PrintHelloWorld() => NativeHello();
 }

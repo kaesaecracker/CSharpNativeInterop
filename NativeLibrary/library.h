@@ -1,18 +1,31 @@
 #pragma once
 
-#include <string>
+#include <thread>
 
+#include "logger.h"
 #include "nativelibrary_export.h"
 
-typedef int64_t MessageHandle;
-typedef char8_t msgstr_t[];
+namespace nativelibrary {
 
-typedef MessageHandle (*PassMessageCallback)(const msgstr_t message);
+    typedef int64_t MessageHandle;
 
-class NATIVELIBRARY_NO_EXPORT NativeLibrary;
+    class NATIVELIBRARY_NO_EXPORT NativeLibrary {
+        ILogger* logger;
+        std::thread bg_thread;
+        volatile bool terminating = false;
 
-NATIVELIBRARY_EXPORT NativeLibrary* NativeLibrary_Initialize(PassMessageCallback message_callback);
+        void bg() const;
+    public:
+        explicit NativeLibrary(ILogger* logger);
+        ~NativeLibrary();
 
-NATIVELIBRARY_EXPORT void NativeLibrary_Deinitialize(const NativeLibrary* instance);
+        void Test() const;
+    };
 
-NATIVELIBRARY_EXPORT void NativeLibrary_Test(const NativeLibrary* instance);
+    NATIVELIBRARY_EXPORT NativeLibrary* NativeLibrary_Constructor(ILogger* logger);
+
+    NATIVELIBRARY_EXPORT void NativeLibrary_Destructor(const NativeLibrary* instance);
+
+    NATIVELIBRARY_EXPORT void NativeLibrary_Test(const NativeLibrary* instance);
+
+}
