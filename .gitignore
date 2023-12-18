@@ -1,8 +1,7 @@
 .idea
 bin
 obj
-outDebug
-outRelease
+out
 cmake-build-debug
 cmake-build-release
 

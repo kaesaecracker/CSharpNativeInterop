@@ -6,12 +6,17 @@ set -x
 
 # configuration
 BUILD_CONFIG="Debug"
-BUILD_OUTPUT_DIR=$(realpath "out$BUILD_CONFIG")
-BUILD_NATIVELIBRARY_BUILD_DIR=$(realpath NativeLibrary/cmake-build-debug)
+if [ $# -eq 1 ]; then
+    BUILD_CONFIG=$1
+fi
+BASEDIR=$(dirname $0)
+BUILD_OUTPUT_DIR="$BASEDIR/out/$BUILD_CONFIG"
+NATIVELIBRARY_DIR="${BASEDIR}/NativeLibrary"
+BUILD_NATIVELIBRARY_BUILD_DIR="${NATIVELIBRARY_DIR}/bin/$BUILD_CONFIG"
 
 # remove output folder
 (rm -r $BUILD_OUTPUT_DIR || true)
-mkdir $BUILD_OUTPUT_DIR
+mkdir -p $BUILD_OUTPUT_DIR
 
 # build CSharpApp
 dotnet publish CSharpApp -c $BUILD_CONFIG -o $BUILD_OUTPUT_DIR
@@ -20,7 +25,7 @@ dotnet publish CSharpApp -c $BUILD_CONFIG -o $BUILD_OUTPUT_DIR
 mkdir -p $BUILD_NATIVELIBRARY_BUILD_DIR
 cd $BUILD_NATIVELIBRARY_BUILD_DIR
     # generate build scripts
-    cmake ..     
+    cmake $NATIVELIBRARY_DIR   
 
     # build using all cores
     cmake --build . --config $BUILD_CONFIG -j $(nproc)
